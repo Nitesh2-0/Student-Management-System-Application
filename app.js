@@ -7,6 +7,7 @@ const indexRouter = require('./routes/index');
 const userRouter = require('./routes/users')
 const passport = require('passport');
 
+
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs'); 
 

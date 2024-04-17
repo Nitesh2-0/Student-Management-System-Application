@@ -110,7 +110,10 @@
         <a href="#admission" class="nav-link text-white hover:text-gray-300">Admissions</a>
       </div>
       <div class="flex-shrink-0">
-        <a href="/register" class="text-white hover:text-gray-300 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors duration-300">Sign Up</a>
+        <a href="/feed/user/Dets/<%=  user._id %>" class="text-white flex items-center gap-4">
+          <p><%= user.username %></p>
+          <img class="w-8 h-8 rounded-full shadow-lg bg-gray-100" src="<%= user.img %>" alt="">
+        </a>
       </div>
     </div>
   </nav>

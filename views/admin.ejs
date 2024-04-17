@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/images/TIT-logo.webp" type="image/x-icon">
+</head>
+<body class="bg-gray-200 md:flex">
+    
+    <div class="fixed top-0 w-full p-4 md:p-6 font-bold bg-green-600 text-white">
+        <h1 class="text-center text-2xl">Student Management System</h1>
+        <div class="flex justify-between items-center w-full pt-3 md:pt-0 mt-3">
+            <h1 class="px-7 sm:mt-0 py-2 bg-green-700 w-40 text-center rounded-md">
+                <a href="/newStudent"><i class="ri-user-add-fill"></i> Add New</a>
+            </h1>
+            <h1 class="px-7 hidden sm:block sm:mt-0 py-2 bg-green-700 text-center rounded-md">
+                <a href="/admissionInquiry/result"><i class="ri-user-add-fill"></i>See Admission Inquiry</a>
+            </h1>
+            <div class="flex items-center bg-green-700 py-1 px-3 rounded-full cursor-pointer">
+                <p class="font-light rounded-md mr-3"><%= admin.username %></p>
+                <a href='/feed/admin/Dets/<%= admin._id %>'>
+                    <img class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden shadow-lg" src="<%= admin.img %>" alt="Profile Image" />
+                </a>
+            </div>
+        </div>
+    </div>    
+
+    <div class="ml-0 p-1 sm:p-0 mt-6 mt-32 flex flex-col items-center w-full justify-center">
+      <% if (users && users.length > 0) { %>
+      <table class="w-full bg-white shadow-md rounded mb-4">
+          <thead >
+              <tr class="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
+                  <th class="py-4 px-1 lg:px-10 text-center">S.N</th>
+                  <th class="py-4 px-1 bg-yellow-300 text-black-600 lg:px-10 text-center">Show</th>
+                  <th class="py-4 px-1 lg:px-10 text-center">Name</th>
+                  <th class="py-4 px-1 hidden lg:table-cell lg:px-10 text-center">Mobile Number</th>
+                  <th class="py-4 px-1 hidden lg:table-cell lg:px-10 text-center">Update</th>
+                  <th class="py-4 px-1 hidden lg:table-cell lg:px-10 text-center">Delete</th>
+              </tr>
+          </thead>
+          <tbody class="text-gray-600 text-sm font-light">
+              <% users.forEach((user, index) => { %>
+              <tr class="border-b border-gray-200 hover:bg-gray-100 text-center">
+                  <td class="py-4 px-1 lg:px-16 text-center"><%= index + 1 %></td>
+                  <td class="py-4 px-1 lg:px-16 text-center">
+                    <a href="/feed/user/Dets/<%= user._id %>" class="flex justify-center items-center h-full">
+                      <img class="w-10 h-10 rounded-full overflow-hidden shadow-sm" src="<%= user.img %>" alt="">
+                    </a>
+                  </td>                  
+                  <td class="py-4 px-1 lg:px-10 text-center"><%= user.username %></td>
+                  <td class="py-4 px-1 hidden lg:table-cell lg:px-12 text-center">+91 <%= user.mobNumber%></td>
+                  <td class="py-4 px-1 hidden lg:table-cell lg:px-16 text-center"><a href="/edit/<%= user._id %>"><i class="ri-edit-line text-blue-500"></i></a></td>
+                  <td class="py-4 px-1 hidden lg:table-cell lg:px-16 text-center"><a href="/delete/<%= user._id %>"><i class="ri-delete-bin-6-line text-red-500"></i></a></td>
+              </tr>
+              <% }) %>
+          </tbody>
+      </table>
+      <% } else { %>
+        <div class="mt-40  mx-auto flex flex-col items-center justify-center">
+          <h1 class="p-2 bg-red-700 rounded border border-slate-500 text-center text-white font-bold">No Student Available</h1>
+          <a href="/newStudent" class="text-center flex flex-col items-center justify-center mt-7">
+              <i class="ri-user-add-fill w-12 flex items-center justify-center h-12 rounded-full bg-green-700 text-white text-2xl"></i>
+              <p class="font-bold">Add new Student</p>
+          </a>
+      </div>      
+      <% } %>
+  </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/script.js"></script>
+</body>
+
+</html>

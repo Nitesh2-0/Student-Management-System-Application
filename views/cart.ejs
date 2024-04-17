@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="shortcut icon" href="/images/TIT-logo.webp" type="image/x-icon">
+    <style>
+      body {
+        background-image: url('/images/TIT-hero.jpeg');
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+      }
+      .card {
+        background-color: rgb(248, 246, 246);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 600px;
+        margin: auto;
+        padding: 10px;
+      }
+      .card-header {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+      .user-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: auto;
+        /* margin-top: -75px;  */
+        border: 5px solid #fff;
+        box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      .user-details {
+        padding: 20px;
+      }
+      .user-details p {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+      .logout-button {
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+</head>
+<body class="bg-gray-500">
+  <main class="container mx-auto h-screen flex flex-col justify-center items-center p-8">
+    <% if (!(isAdmin) && adminRequest) { %>
+      <div class="card">
+        <img src="<%= user.img %>" alt="User Photo" class="user-photo">
+        <div class="user-details">
+          <p><i class="ri-user-line mr-2"></i><b>Username:</b> <%= user.username %></p>
+          <p><i class="ri-phone-line mr-2"></i><b>Mob. Number:</b> <%= user.mobNumber %></p>
+          <p><i class="ri-building-line mr-2"></i><b>College Name:</b> <%= user.college %></p>
+          <p><i class="ri-book-line mr-2"></i><b>Course:</b> <%= user.course %></p>
+          <p><i class="ri-time-line mr-2"></i><b>Session:</b> <%= user. session %></p>
+        </div>        
+        <div class="logout-button">
+          <a href="" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
+            <i class="ri-edit-line mr-2"></i>Edit
+          </a>
+          <a href="" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
+            <i class="ri-delete-bin-line mr-2"></i>Delete
+          </a>
+        </div>
+      </div>
+      <% } else if (isAdmin) { %>
+        <div class="card">
+          <img src="<%= admin.img %>" alt="Admin Photo" class="user-photo">
+          <div class="user-details">
+            <p><i class="ri-user-line mr-2"></i><b>Name:</b> <%= admin.username %></p>
+            <p><i class="ri-phone-line mr-2"></i><b>Mob. Number: </b> +91 <%= admin.mobNumber %></p>
+            <p><i class="ri-building-line mr-2"></i><b>Company Name:</b> <%= admin.college %></p>
+          </div>
+          <div class="logout-button">
+            <a href="" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
+              <i class="ri-edit-line mr-2"></i>Edit
+            </a>
+            <a href="/logout" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
+              <i class="ri-logout-box-line mr-2"></i>Logout
+            </a>
+          </div>
+        </div> 
+    <% } else { %>
+      <div class="card">
+        <img src="<%= user.img %>" alt="User Photo" class="user-photo">
+        <div class="user-details">
+          <p><i class="ri-user-line mr-2"></i><b>Username:</b> <%= user.username %></p>
+          <p><i class="ri-phone-line mr-2"></i><b>Mob. Number:</b> <%= user.mobNumber %></p>
+          <p><i class="ri-building-line mr-2"></i><b>College Name:</b> <%= user.college %></p>
+          <p><i class="ri-book-line mr-2"></i><b>Course:</b> <%= user.course %></p>
+          <p><i class="ri-time-line mr-2"></i><b>Session:</b> <%= user. session %></p>
+        </div>        
+        <div class="logout-button">
+          <a href="" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
+            <i class="ri-edit-line mr-2"></i>Edit
+          </a>
+          <a href="/logout" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
+            <i class="ri-logout-box-line mr-2"></i>Logout
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>
+

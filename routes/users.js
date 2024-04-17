@@ -20,6 +20,22 @@ const userShema = mongoose.Schema({
   },
   adminId:{
     type:String,
+  },
+  img:{
+    type:String,
+    default:'https://static.vecteezy.com/system/resources/thumbnails/020/911/740/small_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png',
+  },
+  college:{
+    type : String,
+    default:'Technocrats Institute of Technology Bhopal MP.'
+  },
+  course:{
+    type:String,
+    default:'BTech'
+  },
+  session:{
+    type:String,
+    default:'0-0'
   }
 })
 
