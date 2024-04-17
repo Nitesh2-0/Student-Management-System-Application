@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/images/TIT-logo.webp" type="image/x-icon">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen p-2">
+  <% if (action == 'Create User') { %>
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+      <h1 class="text-2xl font-semibold text-center mb-6"><%= formType %></h1>
+      <% if (errMsg) { %>
+        <div class="mb-4">
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error: </strong>
+            <span class="block sm:inline"><%= errMsg %></span>
+          </div>
+        </div>
+      <% } %>
+      <form action="/feed/admin/user/created" method="POST">
+          <div class="mb-4 flex items-center">
+              <div class="flex-1">
+                <div class="mr-2 flex gap-4">
+                  <i class="fas fa-user text-gray-500"></i><label for="username" class="block text-sm font-medium text-gray-700">Username or Email:</label>
+                </div>
+                <input type="text" id="username" name="username" placeholder="Enter Username or Email" required class="mt-1 p-2 w-full border rounded-md">
+              </div>
+          </div>
+
+          <div class="mb-4 flex items-center">
+              <div class="flex-1">
+                <div class="mr-2 flex gap-4">
+                  <i class="fas fa-mobile-alt text-gray-500"></i><label for="mobNumber" class="block text-sm font-medium text-gray-700">Mobile Number:</label>
+                </div>
+                <input type="text" id="mobNumber" name="mobNumber" placeholder="Enter Mobile Number" required class="mt-1 p-2 w-full border rounded-md">
+              </div>
+          </div>
+          
+          <div class="mb-4 flex items-center">
+              <div class="flex-1">
+                <div class="mr-2 flex gap-4">
+                <i class="fas fa-book text-gray-500"></i><label for="course" class="block text-sm font-medium text-gray-700">Course:</label>
+                </div>
+                <input type="text" id="course" name="course" placeholder="Enter Course" class="mt-1 p-2 w-full border rounded-md">
+              </div>
+          </div>
+
+          <div class="mb-4 flex items-center">
+              <div class="flex-1">
+                <div class="mr-2 flex gap-4">
+                  <i class="fas fa-calendar-alt text-gray-500"></i><label for="session" class="block text-sm font-medium text-gray-700">Session:</label>
+                </div>
+                <input type="text" id="session" name="session" placeholder="Enter Session" class="mt-1 p-2 w-full border rounded-md">
+              </div>
+          </div>
+
+          <div class="mb-4 flex items-center">
+            <div class="flex-1">
+              <div class="mr-2 flex gap-4">
+                <i class="fas fa-lock text-gray-500"></i><label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+              </div>
+              <input type="password" id="password" name="password" placeholder="Enter Password" required class="mt-1 p-2 w-full border rounded-md">
+            </div>
+          </div>
+
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full"><%= action %></button>
+      </form>
+  </div>
+  <% } else { %>
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+      <h1 class="text-2xl font-semibold text-center mb-6">Update User</h1>
+      <% if (errMsg) { %>
+        <div class="mb-4">
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error: </strong>
+            <span class="block sm:inline"><%= errMsg %></span>
+          </div>
+        </div>
+      <% } %>
+      <form action="/feed/user/updated" method="POST">
+          <div class="mb-4 flex items-center">
+            <div class="flex-1">
+              <div class="mr-2 flex gap-4">
+                <i class="fas fa-user text-gray-500"></i><label for="username" class="block text-sm font-medium text-gray-700">Username or Email:</label>
+              </div>
+              <input type="text" id="username" name="username" placeholder="<%= userData.username %>" required class="mt-1 p-2 w-full border rounded-md" value="<%= userData.username %>">
+            </div>
+        </div>
+
+        <div class="mb-4 flex items-center">
+            <div class="flex-1">
+              <div class="mr-2 flex gap-4">
+                <i class="fas fa-mobile-alt text-gray-500"></i><label for="mobNumber" class="block text-sm font-medium text-gray-700">Mobile Number:</label>
+              </div>
+              <input type="text" id="mobNumber" name="mobNumber" placeholder="<%= userData.mobNumber%>" required class="mt-1 p-2 w-full border rounded-md" value="<%= userData.mobNumber %>">
+            </div>
+        </div>
+
+        <div class="mb-4 flex items-center">
+          <div class="flex-1">
+            <div class="mr-2 flex gap-4">
+              <i class="fas fa-university text-gray-500"></i><label for="session" class="block text-sm font-medium text-gray-700">College:</label>
+            </div>
+            <input type="text" id="session" name="college" placeholder="<%= userData.session %>" class="mt-1 p-2 w-full border rounded-md" value="<%= userData.college %>"> 
+          </div>
+        </div>
+        
+        <div class="mb-4 flex items-center">
+            <div class="flex-1">
+              <div class="mr-2 flex gap-4">
+              <i class="fas fa-book text-gray-500"></i><label for="course" class="block text-sm font-medium text-gray-700">Course:</label>
+              </div>
+              <input type="text" id="course" name="course" placeholder="<%= userData.course %>" class="mt-1 p-2 w-full border rounded-md" value="<%= userData.course %>">
+            </div>
+        </div>
+
+        <div class="mb-4 flex items-center">
+            <div class="flex-1">
+              <div class="mr-2 flex gap-4">
+                <i class="fas fa-calendar-alt text-gray-500"></i><label for="session" class="block text-sm font-medium text-gray-700">Session:</label>
+              </div>
+              <input type="text" id="session" name="session" placeholder="<%= userData.session %>" class="mt-1 p-2 w-full border rounded-md" value="<%= userData.session %>"> 
+            </div>
+        </div>
+
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full">Update Now</button>
+      </form>
+  </div>
+  <% } %>
+</body>
+</html>

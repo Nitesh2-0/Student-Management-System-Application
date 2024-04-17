@@ -23,6 +23,7 @@ passport.serializeUser(userRouter.serializeUser());
 passport.deserializeUser(userRouter.deserializeUser());
 
 app.use(express.urlencoded({extended:false}));
+app.use(require('morgan')('tiny'))
 app.use(express.static(path.join(__dirname,'public')));
 
 app.use('/',indexRouter); 

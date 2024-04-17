@@ -4,23 +4,27 @@ const userModel = require('./users');
 const user      = require('./users');
 const passport = require('passport'); 
 const localStategy = require('passport-local'); 
+const upload = require('./multer'); 
 passport.use(new localStategy(user.authenticate()))
 
-
+//default route 
 router.get('/', function(req, res, next) {
   res.redirect('/index');
 });
 
+//college page 
 router.get('/index', function(req, res, next) {
   res.render('index');
 });
 
+//user feed
 router.get('/feed/student', isloggedIn, async function(req,res,next){
   const username = traceCurrentUser(req, res); 
   const user = await userModel.findOne({ username });
   res.render('feed',{user,title:user.username});
 })
 
+//admin feed
 router.get('/feed/admin', isloggedIn, async (req, res) => {
   try {
     const username = traceCurrentUser(req, res);
@@ -33,6 +37,7 @@ router.get('/feed/admin', isloggedIn, async (req, res) => {
   }
 });
 
+//admin profile details 
 router.get('/feed/admin/Dets/:id', isloggedIn, async (req, res) => {
   try {
     const admin = await userModel.findById(req.params.id); 
@@ -43,6 +48,7 @@ router.get('/feed/admin/Dets/:id', isloggedIn, async (req, res) => {
   }
 });
 
+//userprofile request by admin
 router.get('/feed/user/Dets/:id', isloggedIn, async (req, res) => {
   try {
     const user = await userModel.findById(req.params.id); 
@@ -53,7 +59,119 @@ router.get('/feed/user/Dets/:id', isloggedIn, async (req, res) => {
   }
 });
 
-router.get('/cart',(rea,res) => {
+//userprofile request by user
+router.get('/feed/user/details/:id', isloggedIn, async (req, res) => {
+  try {
+    const user = await userModel.findById(req.params.id); 
+    res.render('cart',{user,title:user.username,isAdmin:false, adminRequest:false})
+  } catch (error) {
+    console.error('Error fetching admin data:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+//user delted by the admin here
+router.get('/feed/user/delete/:id', async (req,res) => {
+  try {
+    await userModel.findByIdAndDelete(req.params.id); 
+    res.redirect('/feed/admin');
+  } catch (error) {
+    console.log(error.message);
+  }
+})
+
+//create user render here
+router.get('/feed/admin/createNewUser', (req,res) => {
+  try {
+    res.render('createUser',{errMsg:null, formType:'Create New User', action:'Create User',title:'Create New User'});
+  } catch (error) {
+    console.log(error.message); 
+  }
+})
+
+//user created here
+router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
+  try {
+    const existingUser = await userModel.findOne({ username: req.body.username });
+    if (existingUser) {
+      return res.render('createUser',{errMsg : 'This Username is already exist.',title:'Create New User',action:'Create User', formType:'Create New User'});
+    }
+    const newUser = new userModel({
+      username:req.body.username,
+      mobNumber:req.body.mobNumber,
+      college:req.body.college,
+      course:req.body.course,
+      session:req.body.session,
+    })
+    const registeredUser = await userModel.register(newUser, req.body.password);
+    passport.authenticate('local')(req, res, () => {
+      res.redirect('/login')
+    });
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+// update user rendering
+router.get('/feed/user/update/:id', isloggedIn ,async (req,res) =>{
+  try {
+    const userData = await userModel.findById(req.params.id);
+    res.render('createUser',{action:null,userData, title:'Update User Details', errMsg:null});
+  } catch (error) {
+    console.log(error)
+    res.status(500).send("Internal Server Error")
+  }
+})
+
+// image uploading
+router.post('/feed/upload/:id', upload.single('image'), async (req, res) => {
+  try {
+      const uri = 'https://static.vecteezy.com/system/resources/thumbnails/020/911/740/small_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png'
+      const userId = req.params.id; 
+      const uploadedImageUrl = req.file ? '/uploads/' + req.file.filename : uri; 
+      await userModel.findByIdAndUpdate(userId, { img: uploadedImageUrl });
+      res.redirect('/login');
+  } catch (error) {
+      console.error('Error updating image:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// update user action 
+router.post('/feed/user/updated', async (req,res) => {
+  try {
+    let {username, mobNumber, college, course, session} = req.body;
+    const isUser = await userModel.findOne({username});
+    const userData = {
+      username:username,
+      mobNumber:mobNumber,
+      college:college,
+      course:course,
+      session:session
+    }
+    if(!isUser) return res.render('createUser',{errMsg : 'No username changes permitted.',title:'Update User Details',action:'update user', userData}); 
+    await userModel.findOneAndUpdate(
+      { username },
+      {
+        $set: {
+          mobNumber: mobNumber,
+          college: college,
+          course: course,
+          session: session
+        }
+      }
+    );    
+    res.redirect('/feed/admin');
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+router.get('/cart',isloggedIn,(rea,res) => {
   res.render('cart')
 })
 
@@ -97,49 +215,9 @@ function isloggedIn(req, res, next) {
   else res.redirect('/login');
 }
 
-function isSeller(req, res, next) {
-  if (req.user.role === 'admin') return next()
-  else res.redirect('/')
-}
-
 router.get('/login', function (req, res) {
   res.render('login', { title: 'Login' , errorMessage:null});
 })
-
-// router.post('/login', async (req, res, next) => {
-//   passport.authenticate('local', async (err, user, info) => {
-//     if (err) {
-//       console.error('Authentication error:', err);
-//       return res.status(500).send('Internal Server Error');
-//     }
-//     if (!user) {
-//       return res.render('login', { errorMessage: 'Password is not correct.' });
-//     }
-//     req.session.user = {
-//       _id: req.user._id,
-//       username: req.user.username,
-//       role: req.user.role
-//     };
-//     try {
-//       req.login(user, (err) => {
-//         if (err) {
-//           console.error('Login error:', err);
-//           return next(err);
-//         }
-//         if (user.role === 'admin') {
-//           res.redirect('/feed');
-//         } else if (user.role === 'user') {
-//           res.redirect('/feed');
-//         } else {
-//           res.redirect('/');
-//         }
-//       });
-//     } catch (error) {
-//       console.error('Login error:', error);
-//       return res.status(500).send('Internal Server Error');
-//     }
-//   })(req, res, next);
-// });
 
 router.post('/login', async (req, res, next) => {
   passport.authenticate('local', async (err, user, info) => {
@@ -177,7 +255,6 @@ router.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
-
 router.get('/logout', (req, res, next) => {
   if (req.isAuthenticated())
     req.logout((err) => {
@@ -189,6 +266,7 @@ router.get('/logout', (req, res, next) => {
   }
 });
 
+// tracking current user
 const traceCurrentUser = (req, res, next) => {
   if (req.isAuthenticated()) {
     const currUser = req.user; 
@@ -208,14 +286,12 @@ router.get('/feed', async (req, res) => {
       }
       return res.redirect('/feed/admin');
     }else {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.redirect('/login')
     }
   } catch (error) {
     console.error('Error fetching current user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;

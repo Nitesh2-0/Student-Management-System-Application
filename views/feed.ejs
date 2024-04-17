@@ -99,7 +99,7 @@
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex-shrink-0">
         <a href="/" class="flex items-center text-white">
-          <img src="/images/TIT-logo.webp" alt="College Logo" class="h-8 w-auto mr-2 rounded-md">
+          <img src="/images/TIT-logo.webp" alt="College Logo" class="h-8 w-auto mr-2 rounded">
           <span class="font-bold text-lg">TIT GROUP</span>
         </a>
       </div>
@@ -110,7 +110,7 @@
         <a href="#admission" class="nav-link text-white hover:text-gray-300">Admissions</a>
       </div>
       <div class="flex-shrink-0">
-        <a href="/feed/user/Dets/<%=  user._id %>" class="text-white flex items-center gap-4">
+        <a href="/feed/user/details/<%=  user._id %>" class="text-white flex items-center gap-4">
           <p><%= user.username %></p>
           <img class="w-8 h-8 rounded-full shadow-lg bg-gray-100" src="<%= user.img %>" alt="">
         </a>

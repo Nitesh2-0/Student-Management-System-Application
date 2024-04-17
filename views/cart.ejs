@@ -52,11 +52,17 @@
       }
     </style>
 </head>
-<body class="bg-gray-500">
+<body class="bg-gray-500 p-4">
   <main class="container mx-auto h-screen flex flex-col justify-center items-center p-8">
     <% if (!(isAdmin) && adminRequest) { %>
       <div class="card">
-        <img src="<%= user.img %>" alt="User Photo" class="user-photo">
+        <div class="relative bg-gray-200 p-2 rounded">
+          <img src="<%= user.img %>" alt="User Photo" class="user-photo">
+          <form action="/feed/upload/<%= user._id %>" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" class="ml-10 mt-2">
+            <button type="submit" class="bg-green-400 text-white px-4 py-1 rounded-lg">Upload</button>
+          </form>          
+        </div> 
         <div class="user-details">
           <p><i class="ri-user-line mr-2"></i><b>Username:</b> <%= user.username %></p>
           <p><i class="ri-phone-line mr-2"></i><b>Mob. Number:</b> <%= user.mobNumber %></p>
@@ -65,34 +71,46 @@
           <p><i class="ri-time-line mr-2"></i><b>Session:</b> <%= user. session %></p>
         </div>        
         <div class="logout-button">
-          <a href="" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
+          <a href="/feed/user/update/<%= user._id %>" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
             <i class="ri-edit-line mr-2"></i>Edit
           </a>
-          <a href="" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
-            <i class="ri-delete-bin-line mr-2"></i>Delete
+          <a href="/logout" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
+            <i class="ri-delete-bin-6-line"></i> &MediumSpace; Delete
           </a>
         </div>
       </div>
       <% } else if (isAdmin) { %>
-        <div class="card">
-          <img src="<%= admin.img %>" alt="Admin Photo" class="user-photo">
+        <div class="card">       
+          <div class="relative bg-gray-200 p-2 rounded">
+            <img src="<%= admin.img %>" alt="User Photo" class="user-photo">
+            <form action="/feed/upload/<%= admin._id %>" method="post" enctype="multipart/form-data">
+              <input type="file" name="image" class="ml-10 mt-2">
+              <button type="submit" class="bg-green-400 text-white px-4 py-1 rounded-lg">Upload</button>
+            </form>          
+          </div>                                    
           <div class="user-details">
             <p><i class="ri-user-line mr-2"></i><b>Name:</b> <%= admin.username %></p>
             <p><i class="ri-phone-line mr-2"></i><b>Mob. Number: </b> +91 <%= admin.mobNumber %></p>
             <p><i class="ri-building-line mr-2"></i><b>Company Name:</b> <%= admin.college %></p>
           </div>
           <div class="logout-button">
-            <a href="" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
+            <a href="/feed/user/update/<%= admin._id %>" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
               <i class="ri-edit-line mr-2"></i>Edit
             </a>
             <a href="/logout" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
               <i class="ri-logout-box-line mr-2"></i>Logout
             </a>
           </div>
-        </div> 
+        </div>
     <% } else { %>
       <div class="card">
-        <img src="<%= user.img %>" alt="User Photo" class="user-photo">
+        <div class="relative bg-gray-200 p-2 rounded">
+          <img src="<%= user.img %>" alt="User Photo" class="user-photo">
+          <form action="/feed/upload/<%= user._id %>" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" class="ml-10 mt-2">
+            <button type="submit" class="bg-green-400 text-white px-4 py-1 rounded-lg">Upload</button>
+          </form>          
+        </div> 
         <div class="user-details">
           <p><i class="ri-user-line mr-2"></i><b>Username:</b> <%= user.username %></p>
           <p><i class="ri-phone-line mr-2"></i><b>Mob. Number:</b> <%= user.mobNumber %></p>
@@ -101,7 +119,7 @@
           <p><i class="ri-time-line mr-2"></i><b>Session:</b> <%= user. session %></p>
         </div>        
         <div class="logout-button">
-          <a href="" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
+          <a href="/feed/user/update/<%= user._id %>" class="text-white bg-indigo-500 px-4 py-2 rounded-md hover:bg-indigo-600 inline-flex items-center">
             <i class="ri-edit-line mr-2"></i>Edit
           </a>
           <a href="/logout" class="text-white bg-red-500 px-4 py-2 rounded-md hover:bg-red-600 ml-4 inline-flex items-center">
@@ -111,6 +129,14 @@
       </div>
     <% } %>
   </main>
+  <script>
+    document.getElementById('upload-icon').addEventListener('mouseover', function() {
+    this.style.opacity = "1";
+    });
+    document.getElementById('upload-icon').addEventListener('mouseout', function() {
+    this.style.opacity = "0";
+  });
+  </script>
 </body>
 </html>
 
