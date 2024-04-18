@@ -28,7 +28,7 @@ router.get('/feed/student', isloggedIn, async function(req,res,next){
 router.get('/feed/admin', isloggedIn, async (req, res) => {
   try {
     const username = traceCurrentUser(req, res);
-    const admin = await userModel.findOne({ username }); 
+    const admin = await userModel.findOne({ username}); 
     const users = await userModel.find({ role: { $ne: 'admin' } });
     res.render('admin',{users , admin});
   } catch (error) {
@@ -105,7 +105,7 @@ router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
     })
     const registeredUser = await userModel.register(newUser, req.body.password);
     passport.authenticate('local')(req, res, () => {
-      res.redirect('/login')
+      res.redirect('/feed/student')
     });
 
   } catch (error) {
@@ -124,24 +124,32 @@ router.get('/feed/user/update/:id', isloggedIn ,async (req,res) =>{
     res.status(500).send("Internal Server Error")
   }
 })
+router.get('/feed/admin/update/:id', isloggedIn ,async (req,res) =>{
+  try {
+    const userData = await userModel.findById(req.params.id);
+    res.render('createUser',{action:'admin',userData, title:'Update admin Details', errMsg:null});
+  } catch (error) {
+    console.log(error)
+    res.status(500).send("Internal Server Error")
+  }
+})
 
 // image uploading
-router.post('/feed/upload/:id', upload.single('image'), async (req, res) => {
+router.post('/feed/upload/:id', isloggedIn ,upload.single('image'), async (req, res) => {
   try {
       const uri = 'https://static.vecteezy.com/system/resources/thumbnails/020/911/740/small_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png'
       const userId = req.params.id; 
       const uploadedImageUrl = req.file ? '/uploads/' + req.file.filename : uri; 
       await userModel.findByIdAndUpdate(userId, { img: uploadedImageUrl });
-      res.redirect('/login');
+      res.redirect('/feed/student');
   } catch (error) {
       console.error('Error updating image:', error);
       res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-
 // update user action 
-router.post('/feed/user/updated', async (req,res) => {
+router.post('/feed/user/updated', isloggedIn ,async (req,res) => {
   try {
     let {username, mobNumber, college, course, session} = req.body;
     const isUser = await userModel.findOne({username});
@@ -164,7 +172,38 @@ router.post('/feed/user/updated', async (req,res) => {
         }
       }
     );    
-    res.redirect('/feed/admin');
+    res.redirect('/login');
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+//admin details update
+router.post('/feed/admin/updated', isloggedIn,async (req,res) => {
+  try {
+    let {username, mobNumber, college, course, session} = req.body;
+    const isUser = await userModel.findOne({username});
+    const userData = {
+      username:username,
+      mobNumber:mobNumber,
+      college:college,
+      course:course,
+      session:session
+    }
+    if(!isUser) return res.render('createUser',{errMsg : 'No username changes permitted.',title:'Update User Details',action:'update user', userData}); 
+    await userModel.findOneAndUpdate(
+      { username },
+      {
+        $set: {
+          mobNumber: mobNumber,
+          college: college,
+          course: course,
+          session: session
+        }
+      }
+    );    
+    res.redirect('/login');
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
