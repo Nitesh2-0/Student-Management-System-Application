@@ -84,7 +84,7 @@ router.get('/feed/user/delete/:id', async (req,res) => {
 //create user render here
 router.get('/feed/admin/createNewUser', (req,res) => {
   try {
-    res.render('createUser',{errMsg:null, formType:'Create New User', action:'Create User',title:'Create New User'});
+    res.render('createAndUpdateUser',{errMsg:null, formType:'Create New User', action:'Create User',title:'Create New User'});
   } catch (error) {
     console.log(error.message); 
   }
@@ -95,7 +95,7 @@ router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
   try {
     const existingUser = await userModel.findOne({ username: req.body.username });
     if (existingUser) {
-      return res.render('createUser',{errMsg : 'This Username is already exist.',title:'Create New User',action:'Create User', formType:'Create New User'});
+      return res.render('createAndUpdateUser',{errMsg : 'This Username is already exist.',title:'Create New User',action:'Create User', formType:'Create New User'});
     }
     const newUser = new userModel({
       username:req.body.username,
