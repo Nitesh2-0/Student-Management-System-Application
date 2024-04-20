@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router(); 
 const userModel = require('./users');
 const user      = require('./users');
+const dbAdmission = require('./admissionInquiry')
 const passport = require('passport'); 
 const localStategy = require('passport-local'); 
 const upload = require('./multer'); 
@@ -48,7 +49,7 @@ router.get('/feed/admin/Dets/:id', isloggedIn, async (req, res) => {
   }
 });
 
-//userprofile request by admin
+//user profile request by admin
 router.get('/feed/user/Dets/:id', isloggedIn, async (req, res) => {
   try {
     const user = await userModel.findById(req.params.id); 
@@ -59,7 +60,7 @@ router.get('/feed/user/Dets/:id', isloggedIn, async (req, res) => {
   }
 });
 
-//userprofile request by user
+//user profile request by user
 router.get('/feed/user/details/:id', isloggedIn, async (req, res) => {
   try {
     const user = await userModel.findById(req.params.id); 
@@ -118,16 +119,18 @@ router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
 router.get('/feed/user/update/:id', isloggedIn ,async (req,res) =>{
   try {
     const userData = await userModel.findById(req.params.id);
-    res.render('createUser',{action:null,userData, title:'Update User Details', errMsg:null});
+    res.render('createAndUpdateUser',{action:null,userData, title:'Update User Details', errMsg:null});
   } catch (error) {
     console.log(error)
     res.status(500).send("Internal Server Error")
   }
 })
+
+//
 router.get('/feed/admin/update/:id', isloggedIn ,async (req,res) =>{
   try {
     const userData = await userModel.findById(req.params.id);
-    res.render('createUser',{action:'admin',userData, title:'Update admin Details', errMsg:null});
+    res.render('createAndUpdateUser',{action:'admin',userData, title:'Update admin Details', errMsg:null});
   } catch (error) {
     console.log(error)
     res.status(500).send("Internal Server Error")
@@ -160,7 +163,7 @@ router.post('/feed/user/updated', isloggedIn ,async (req,res) => {
       course:course,
       session:session
     }
-    if(!isUser) return res.render('createUser',{errMsg : 'No username changes permitted.',title:'Update User Details',action:'update user', userData}); 
+    if(!isUser) return res.render('createAndUpdateUser',{errMsg : 'No username changes permitted.',title:'Update User Details',action:'update user', userData}); 
     await userModel.findOneAndUpdate(
       { username },
       {
@@ -173,6 +176,33 @@ router.post('/feed/user/updated', isloggedIn ,async (req,res) => {
       }
     );    
     res.redirect('/login');
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+//admin updated by this route
+router.post('/feed/admin/updated', isloggedIn ,async (req,res) => {
+  try {
+    let {username, mobNumber,college} = req.body;
+    const isUser = await userModel.findOne({username});
+    const userData = {
+      username:username,
+      mobNumber:mobNumber,
+      college:college,
+    }
+    if(!isUser) return res.render('createAndUpdateUser',{errMsg : 'No username changes permitted.',title:'Update Admin Details',action:'admin', userData}); 
+    await userModel.findOneAndUpdate(
+      { username },
+      {
+        $set: {
+          mobNumber: mobNumber,
+          college:college
+        }
+      }
+    );    
+    res.redirect('/feed/admin');
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
@@ -209,6 +239,42 @@ router.post('/feed/admin/updated', isloggedIn,async (req,res) => {
     res.status(500).send('Internal Server Error');
   }
 })
+
+// Admission Request form submission
+router.post('/feed/admin/request/:id', async (req, res) => {
+  let { name, email, phone, course, message } = req.body;
+  try {
+    const admissionRequest = await new dbAdmission({
+      username: email,
+      email: email,
+      name: name,
+      phoneNumber: "+91" + phone,
+      course: course,
+      message: message,
+    });
+    await admissionRequest.save();
+    res.redirect('/feed/student')
+  } catch (error) {
+    res.status(500).json({ success: false, message: "An error occurred while processing your request." });
+  }
+});
+
+//admission Request Deleted by Admin
+router.get('/feed/admin/delete/request/:id', async (req,res) => {
+  await dbAdmission.findByIdAndDelete(req.params.id); 
+  res.redirect('/feed/admin/admissionRequest/dashboard')
+})
+
+//admission Inquery 
+router.get('/feed/admin/admissionRequest/dashboard', async (req, res) => {
+  try {
+    const newAdmissions = await dbAdmission.find({});
+    res.render('newAdmission', { newAdmissions});
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 router.get('/cart',isloggedIn,(rea,res) => {
   res.render('cart')
@@ -315,7 +381,7 @@ const traceCurrentUser = (req, res, next) => {
   }
 };
 
-router.get('/feed', async (req, res) => {
+router.get('/feed', isloggedIn ,async (req, res) => {
   try {
     const username = traceCurrentUser(req, res); 
     if (username) {

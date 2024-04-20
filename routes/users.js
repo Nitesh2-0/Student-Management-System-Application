@@ -27,11 +27,11 @@ const userShema = mongoose.Schema({
   },
   college:{
     type : String,
-    default:'Technocrats Institute of Technology Bhopal MP.'
+    default:'fill this section.'
   },
   course:{
     type:String,
-    default:'BTech'
+    default:'fill this section'
   },
   session:{
     type:String,
