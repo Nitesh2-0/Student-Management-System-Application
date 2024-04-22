@@ -20,18 +20,28 @@ router.get('/index', function(req, res, next) {
 
 //user feed
 router.get('/feed/student', isloggedIn, async function(req,res,next){
-  const username = traceCurrentUser(req, res); 
-  const user = await userModel.findOne({ username });
-  res.render('feed',{user,title:user.username});
+  try {
+    const username = traceCurrentUser(req, res); 
+    const user = await userModel.findOne({ username });
+    if(user && user.role=='admin') return res.redirect('/feed/admin');
+    res.render('feed',{user,title:user.username});
+  } catch (error) {
+    console.error('Error fetching admin data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 })
 
 //admin feed
 router.get('/feed/admin', isloggedIn, async (req, res) => {
   try {
-    const username = traceCurrentUser(req, res);
-    const admin = await userModel.findOne({ username}); 
-    const users = await userModel.find({ role: { $ne: 'admin' } });
-    res.render('admin',{users , admin});
+    const username = traceCurrentUser(req, res); 
+    const admin = await userModel.findOne({ username }); 
+    if(admin && admin.role === 'admin') {
+      console.log(admin.role);
+      const users = await userModel.find({ role: { $ne: 'admin' } });
+      return res.render('admin', { users, admin });
+    }
+    res.redirect('/feed/student');    
   } catch (error) {
     console.error('Error fetching admin data:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -82,13 +92,16 @@ router.get('/feed/user/delete/:id', async (req,res) => {
 })
 
 //create user render here
-router.get('/feed/admin/createNewUser', (req,res) => {
+router.get('/feed/admin/createNewUser', async (req, res) => {
   try {
-    res.render('createAndUpdateUser',{errMsg:null, formType:'Create New User', action:'Create User',title:'Create New User'});
+    const username = traceCurrentUser(req, res); 
+    const crrUser = await userModel.findOne({ username });
+    if(crrUser && crrUser.role === 'user') return res.redirect('/feed/student');
+    res.render('createAndUpdateUser', { errMsg: null, formType: 'Create New User', action: 'Create User', title: 'Create New User' });
   } catch (error) {
     console.log(error.message); 
   }
-})
+});
 
 //user created here
 router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
@@ -106,8 +119,9 @@ router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
     })
     const registeredUser = await userModel.register(newUser, req.body.password);
     passport.authenticate('local')(req, res, () => {
-      res.redirect('/feed/student')
+      res.redirect('/feed/admin')
     });
+    res.redirect('/feed/admin')
 
   } catch (error) {
     console.log(error.message)
@@ -175,7 +189,7 @@ router.post('/feed/user/updated', isloggedIn ,async (req,res) => {
         }
       }
     );    
-    res.redirect('/login');
+    res.redirect('/feed/admin');
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
@@ -241,7 +255,7 @@ router.post('/feed/admin/updated', isloggedIn,async (req,res) => {
 })
 
 // Admission Request form submission
-router.post('/feed/admin/request/:id', async (req, res) => {
+router.post('/feed/admission/request/:id', async (req, res) => {
   let { name, email, phone, course, message } = req.body;
   try {
     const admissionRequest = await new dbAdmission({
@@ -261,13 +275,17 @@ router.post('/feed/admin/request/:id', async (req, res) => {
 
 //admission Request Deleted by Admin
 router.get('/feed/admin/delete/request/:id', async (req,res) => {
+  console.log(role);
   await dbAdmission.findByIdAndDelete(req.params.id); 
   res.redirect('/feed/admin/admissionRequest/dashboard')
 })
 
 //admission Inquery 
-router.get('/feed/admin/admissionRequest/dashboard', async (req, res) => {
+router.get('/feed/admin/admissionRequest/dashboard', isloggedIn ,async (req, res) => {
   try {
+    const username = traceCurrentUser(req,res); 
+    const isAdmin = await userModel.findOne({username})
+    if(isAdmin && isAdmin.role == 'user') return res.redirect('/feed/student')
     const newAdmissions = await dbAdmission.find({});
     res.render('newAdmission', { newAdmissions});
   } catch (error) {
@@ -398,5 +416,9 @@ router.get('/feed', isloggedIn ,async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+router.get('*', (req,res) =>{
+  res.render('pageNotFound')
+})
 
 module.exports = router;
