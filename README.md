@@ -1,6 +1,6 @@
-# College Management System
+# Student Management System 
 
-The College Management System is a web application designed and developed by [Your Name] to streamline administrative tasks and enhance user experience for both students and administrators. It provides features for student registration, profile management, admission requests, and administrative control over user data and admission requests.
+The Student Management System is a web application designed to streamline administrative tasks and enhance user experience for both students and administrators. It provides features for student registration, profile management, admission requests, and administrative control over user data and admission requests.
 
 ## Features
 
@@ -31,32 +31,32 @@ The College Management System is a web application designed and developed by [Yo
   - MongoDB for database management
   - Passport.js for authentication and authorization
 
-## How to Use
+## Getting Started
+
+To get a local copy up and running, follow these steps:
 
 1. Clone the repository from GitHub.
-2. Install dependencies using npm.
+2. Install dependencies using `npm install`.
 3. Set up MongoDB database.
 4. Configure Passport.js for authentication and authorization.
-5. Run the application using `node app.js`.
+5. Run the application using `npm run dev`.
 6. Access the application through the specified port in the browser.
 
 ## Screenshots
 
-1. **Registration Page**
-   ![Registration Page](./images/Register.png)
+1. **Registration Page**  
+   ![Registration Page](./public/images/Register.png)
 
-2. **Login Page**
-   ![Login Page](./images/Login.png)
+2. **Login Page**  
+   ![Login Page](./public/images/Login.png)
+3. **Admin Dashboard**  
+   ![Admin Dashboard](./public/images/AdminDashBord%20(1).png)
 
-3. **Admin Dashboard**
-   ![Admin Dashboard](./images/AdminDashBord%20(1).png)
+4. **Profile Details Update Page**  
+   ![Profile Details Update Page](./public/images/Profile.png)
 
-4. **Profile Details Update Page**
-   ![Profile Details Update Page](./images/Profile.png)
-
-5. **Admission Request Page**
-   ![Admission Request Page](./images/AdmissionRequest.png)
-
+5. **Admission Request Page**  
+   ![Admission Request Page](./public/images/AdmissionRequest.png)
 ## Future Improvements
 
 - Enhance authentication with additional strategies (e.g., OAuth).
