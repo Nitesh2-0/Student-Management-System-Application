@@ -24,6 +24,7 @@ The Student Management System is a web application designed to streamline admini
 - **Frontend**:
   - EJS (Embedded JavaScript) for templating
   - JavaScript for client-side scripting
+  - Tailwind CSS for look and feel.
 
 - **Backend**:
   - Node.js for server-side logic
