@@ -1,7 +1,7 @@
 {
-  "name": "tit-m",
+  "name": "Nitesh Kumar",
   "version": "1.0.0",
-  "description": "",
+  "description": "Student Management System",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
