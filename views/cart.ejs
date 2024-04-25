@@ -133,12 +133,24 @@
         <% } %>
     </main>
     <script>
-        document.getElementById('upload-icon').addEventListener('mouseover', function () {
+        /*document.getElementById('upload-icon').addEventListener('mouseover', function () {
             this.style.opacity = "1";
         });
         document.getElementById('upload-icon').addEventListener('mouseout', function () {
             this.style.opacity = "0";
+        });*/
+        document.addEventListener('DOMContentLoaded', function() {
+        var uploadIcon = document.getElementById('upload-icon');
+        if (uploadIcon) {
+            uploadIcon.addEventListener('mouseover', function () {
+            this.style.opacity = "1";
         });
+            uploadIcon.addEventListener('mouseout', function () {
+            this.style.opacity = "0";
+        });
+        }
+});
+
     </script>
 </body>
 </html>

@@ -37,11 +37,12 @@ router.get('/feed/admin', isloggedIn, async (req, res) => {
     const username = traceCurrentUser(req, res); 
     const admin = await userModel.findOne({ username }); 
     if(admin && admin.role === 'admin') {
-      console.log(admin.role);
+      // console.log(admin.role);
       const users = await userModel.find({ role: { $ne: 'admin' } });
-      return res.render('admin', { users, admin });
-    }
+      res.render('admin', { users, admin });
+    }else {
     res.redirect('/feed/student');    
+   }
   } catch (error) {
     console.error('Error fetching admin data:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -121,7 +122,7 @@ router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
     passport.authenticate('local')(req, res, () => {
       res.redirect('/feed/admin')
     });
-    res.redirect('/feed/admin')
+   
 
   } catch (error) {
     console.log(error.message)
@@ -129,11 +130,11 @@ router.post('/feed/admin/user/created', isloggedIn ,async (req,res) =>{
   }
 })
 
-// update user rendering
+// update user rendering by admin
 router.get('/feed/user/update/:id', isloggedIn ,async (req,res) =>{
   try {
-    const userData = await userModel.findById(req.params.id);
-    res.render('createAndUpdateUser',{action:null,userData, title:'Update User Details', errMsg:null});
+    const userData = await userModel.findById({_id:req.params.id});
+    res.render('createAndUpdateUser',{action:null, userData, title:'Update User Details', errMsg:null});
   } catch (error) {
     console.log(error)
     res.status(500).send("Internal Server Error")
@@ -235,7 +236,7 @@ router.post('/feed/admin/updated', isloggedIn,async (req,res) => {
       course:course,
       session:session
     }
-    if(!isUser) return res.render('createUser',{errMsg : 'No username changes permitted.',title:'Update User Details',action:'update user', userData}); 
+    if(!isUser) return res.render('createAndUpdateUser',{errMsg : 'No username changes permitted.',title:'Update User Details',action:'update user', userData}); 
     await userModel.findOneAndUpdate(
       { username },
       {
@@ -257,14 +258,16 @@ router.post('/feed/admin/updated', isloggedIn,async (req,res) => {
 // Admission Request form submission
 router.post('/feed/admission/request/:id', async (req, res) => {
   let { name, email, phone, course, message } = req.body;
+  const talsvir = await userModel.findOne({ _id: req.params.id }).select('img -_id');
   try {
     const admissionRequest = await new dbAdmission({
       username: email,
       email: email,
       name: name,
-      phoneNumber: "+91" + phone,
+      phoneNumber: "+91 " + phone,
       course: course,
       message: message,
+      image:talsvir.img,
     });
     await admissionRequest.save();
     res.redirect('/feed/student')
@@ -275,7 +278,6 @@ router.post('/feed/admission/request/:id', async (req, res) => {
 
 //admission Request Deleted by Admin
 router.get('/feed/admin/delete/request/:id', async (req,res) => {
-  console.log(role);
   await dbAdmission.findByIdAndDelete(req.params.id); 
   res.redirect('/feed/admin/admissionRequest/dashboard')
 })
@@ -287,6 +289,7 @@ router.get('/feed/admin/admissionRequest/dashboard', isloggedIn ,async (req, res
     const isAdmin = await userModel.findOne({username})
     if(isAdmin && isAdmin.role == 'user') return res.redirect('/feed/student')
     const newAdmissions = await dbAdmission.find({});
+    // console.log(newAdmissions);
     res.render('newAdmission', { newAdmissions});
   } catch (error) {
     console.log(error.message);
@@ -321,7 +324,7 @@ router.post('/register', async (req, res) => {
       role: registeredUser.role,
     };
     passport.authenticate('local')(req, res, () => {
-      if (registeredUser.role === 'admin' || registeredUser.role === 'user') {
+      if (registeredUser.role == 'admin' || registeredUser.role == 'user') {
         res.redirect('/feed');
       } else {
         res.redirect('/');

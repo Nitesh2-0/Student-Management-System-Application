@@ -7,53 +7,9 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link rel="shortcut icon" href="/images/TIT-logo.webp" type="image/x-icon">
-  <style>
-    /* Additional Styles */
-    .error-message {
-      color: #e53e3e;
-      font-size: 0.875rem;
-      margin-bottom: 1rem; 
-    }
-    body {
-      background-color: #efefef;
-      padding: 5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center; 
-      height: 100vh; 
-    }
-    .form-container {
-      background-color: rgba(255, 255, 255, 0.9);
-      max-width: 400px;
-      padding: 20px 40px;
-      border-radius: 10px;
-      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-      width: 100%;
-    }
-    .form-label {
-      color: #4b5563;
-    }
-    .form-input {
-      color: #4b5563;
-    }
-    .form-input::placeholder {
-      color: #a0aec0;
-    }
-  
-    .input-container {
-      position: relative;
-    }
-    .input-icon {
-      position: absolute;
-      top: 50%;
-      left: 12px;
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-  </style>
 </head>
-<body>
-  <div class="bg-white p-8 rounded-lg shadow-md form-container">
+<body class="flex justify-center items-center h-screen bg-gray-100 p-4 md:p-0">
+  <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
     <h1 class="text-2xl font-bold mb-4 text-center">Register</h1>
     <% if (errMsg) { %>
       <div class="mb-4">
@@ -64,36 +20,36 @@
       </div>
     <% } %>
     <form action="/register" method="POST">
-      <div class="mb-4 input-container">
-        <label for="username" class="block text-sm font-medium form-label">Username or Email</label>
+      <div class="mb-4">
+        <label for="username" class="block text-sm font-medium">Username or Email</label>
         <div class="relative">
-          <input type="text" id="username" name="username" required class="mt-1 p-2 pl-12 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 form-input" placeholder="Enter your username">
-          <i class="input-icon fas fa-user text-gray-400"></i>
+          <i class="input-icon fas fa-user text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
+          <input type="text" id="username" name="username" required class="mt-1 p-2 pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your username">
         </div>
       </div>
-      <div class="mb-4 input-container">
-        <label for="username" class="block text-sm font-medium form-label">Mob Number</label>
+      <div class="mb-4">
+        <label for="number" class="block text-sm font-medium">Mobile Number</label>
         <div class="relative">
-          <input type="text" id="username" name="number" required class="mt-1 p-2 pl-12 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 form-input" placeholder="Enter your mobile number">
-          <i class="fas fa-phone input-icon text-gray-400"></i>
+          <i class="input-icon fas fa-phone text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
+          <input type="text" id="number" name="number" required class="mt-1 p-2 pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your mobile number">
         </div>
-      </div>              
-      <div class="mb-4 input-container">
-        <label for="password" class="block text-sm font-medium form-label">Password</label>
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium">Password</label>
         <div class="relative">
-          <input type="password" id="password" name="password" required class="mt-1 p-2 pl-12 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 form-input" placeholder="Enter your password">
-          <i class="fas fa-lock input-icon text-gray-400"></i>
+          <i class="input-icon fas fa-lock text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
+          <input type="password" id="password" name="password" required class="mt-1 p-2 pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your password">
         </div>
-      </div>      
+      </div>
       <div class="mb-4">
         <input type="checkbox" id="adminCheckbox" name="admin" class="mt-1 p-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-        <label for="adminCheckbox" class="ml-2 text-sm font-medium form-label">Are you an admin?</label>
+        <label for="adminCheckbox" class="ml-2 text-sm font-medium">Are you an admin?</label>
       </div>
       <div class="mb-4" id="adminIdInput" style="display: none;">
-        <label for="adminId" class="block text-sm font-medium form-label">Admin ID</label>
+        <label for="adminId" class="block text-sm font-medium">Admin ID</label>
         <div class="relative">
-          <input type="text" id="adminId" name="adminId" class="mt-1 p-2 pl-12 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 form-input" placeholder="Enter your admin ID">
-          <i class="fas fa-id-badge input-icon text-gray-400"></i>
+          <i class="input-icon fas fa-id-badge text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
+          <input type="text" id="adminId" name="adminId" class="mt-1 p-2 pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your admin ID">
         </div>
       </div>
       <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">Register</button>
@@ -106,7 +62,6 @@
   <script>
     const adminCheckbox = document.getElementById('adminCheckbox');
     const adminIdInput = document.getElementById('adminIdInput');
-    const showMeError = document.querySelector('.showMeError');
 
     adminCheckbox.addEventListener('change', function() {
       if (this.checked) {
@@ -117,7 +72,6 @@
         adminIdInput.querySelector('input').removeAttribute('required'); 
       }
     });
-
   </script>
 </body>
 </html>

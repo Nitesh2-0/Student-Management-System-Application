@@ -2,7 +2,7 @@ require('dotenv').config();
 const mongoose  = require('mongoose'); 
 const plm = require('passport-local-mongoose'); 
 
-mongoose.connect(process.env.MONGODBURL).then(() => {
+mongoose.connect(process.env.MONGODBURI).then(() => {
     console.log("Database is connected.");
   })
   .catch((err) => {
