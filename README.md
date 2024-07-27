@@ -2,6 +2,11 @@
 
 The Student Management System is a web application designed to streamline administrative tasks and enhance user experience for both students and administrators. It provides features for student registration, profile management, admission requests, and administrative control over user data and admission requests.
 
+#### Login By
+- <a href="https://student-management-system-ikp2.onrender.com/" _target='blanck' >Website Live Here</a>
+- For Admin - <p>Email : example123@gmail.com | Password : 123 | AdminId : 123 </a>
+- For User  - <p>Email : example111@gmail.com | Password : 123 </a>
+
 ## Features
 
 1. **User Registration**: Students can register with the system using their personal details.
